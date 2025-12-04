@@ -4,6 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import Icon from '@/components/ui/icon';
 
@@ -21,9 +26,21 @@ interface CartItem extends Product {
   quantity: number;
 }
 
+interface Review {
+  id: number;
+  author: string;
+  rating: number;
+  text: string;
+  date: string;
+  avatar?: string;
+}
+
 const Index = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [activeTab, setActiveTab] = useState('home');
+  const [sortBy, setSortBy] = useState<string>('popular');
+  const [priceRange, setPriceRange] = useState<number[]>([0, 3000]);
+  const [telegramUsername, setTelegramUsername] = useState('');
 
   const products: Product[] = [
     { id: 1, name: 'Valorant Points', price: 500, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', discount: 20, popular: true },
@@ -35,6 +52,40 @@ const Index = () => {
     { id: 7, name: 'Red Dead Redemption 2', price: 1499, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg' },
     { id: 8, name: 'GTA V', price: 999, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', popular: true },
   ];
+
+  const reviews: Review[] = [
+    { id: 1, author: 'Александр', rating: 5, text: 'Отличный магазин! Валюта пришла моментально, цены адекватные. Буду заказывать еще!', date: '2 дня назад', avatar: '' },
+    { id: 2, author: 'Мария', rating: 5, text: 'Купила Cyberpunk 2077 со скидкой. Ключ активировался сразу. Спасибо!', date: '5 дней назад', avatar: '' },
+    { id: 3, author: 'Дмитрий', rating: 4, text: 'Хороший сервис, быстрая доставка. Иногда бывают задержки, но в целом всё отлично.', date: '1 неделю назад', avatar: '' },
+    { id: 4, author: 'Елена', rating: 5, text: 'Покупала V-Bucks для сына. Всё пришло быстро, ребенок доволен. Рекомендую!', date: '2 недели назад', avatar: '' },
+  ];
+
+  const getFilteredProducts = () => {
+    let filtered = [...products];
+    
+    filtered = filtered.filter(p => {
+      const price = p.discount ? p.price * (1 - p.discount / 100) : p.price;
+      return price >= priceRange[0] && price <= priceRange[1];
+    });
+
+    if (sortBy === 'price-asc') {
+      filtered.sort((a, b) => {
+        const priceA = a.discount ? a.price * (1 - a.discount / 100) : a.price;
+        const priceB = b.discount ? b.price * (1 - b.discount / 100) : b.price;
+        return priceA - priceB;
+      });
+    } else if (sortBy === 'price-desc') {
+      filtered.sort((a, b) => {
+        const priceA = a.discount ? a.price * (1 - a.discount / 100) : a.price;
+        const priceB = b.discount ? b.price * (1 - b.discount / 100) : b.price;
+        return priceB - priceA;
+      });
+    } else if (sortBy === 'popular') {
+      filtered.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
+    }
+
+    return filtered;
+  };
 
   const addToCart = (product: Product) => {
     setCart(prev => {
@@ -268,6 +319,33 @@ const Index = () => {
           </div>
         </section>
 
+        <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between glass-effect p-4 rounded-lg neon-border">
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            <Icon name="SlidersHorizontal" size={24} className="text-primary" />
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[200px] neon-border">
+                <SelectValue placeholder="Сортировка" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="popular">🔥 Популярное</SelectItem>
+                <SelectItem value="price-asc">💰 Дешевле</SelectItem>
+                <SelectItem value="price-desc">💎 Дороже</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            <Label className="text-sm whitespace-nowrap">Цена: {priceRange[0]}₽ - {priceRange[1]}₽</Label>
+            <Slider
+              value={priceRange}
+              onValueChange={setPriceRange}
+              max={3000}
+              min={0}
+              step={50}
+              className="w-[200px]"
+            />
+          </div>
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-12">
           <TabsList className="grid w-full grid-cols-3 mb-8 neon-border">
             <TabsTrigger value="home" className="text-base">
@@ -286,7 +364,7 @@ const Index = () => {
 
           <TabsContent value="home" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
-              {products.filter(p => p.popular).map(product => (
+              {getFilteredProducts().filter(p => p.popular).map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
@@ -294,7 +372,7 @@ const Index = () => {
 
           <TabsContent value="currency" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
-              {products.filter(p => p.category === 'currency').map(product => (
+              {getFilteredProducts().filter(p => p.category === 'currency').map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
@@ -302,12 +380,91 @@ const Index = () => {
 
           <TabsContent value="games" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
-              {products.filter(p => p.category === 'game').map(product => (
+              {getFilteredProducts().filter(p => p.category === 'game').map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           </TabsContent>
         </Tabs>
+
+        <section className="mt-16 rounded-2xl neon-border glass-effect p-8">
+          <h2 className="text-3xl font-bold mb-6 neon-text text-center">
+            <Icon name="MessageCircle" className="inline mr-2" size={32} />
+            Отзывы клиентов
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {reviews.map(review => (
+              <Card key={review.id} className="border-primary/20 glass-effect">
+                <CardHeader>
+                  <div className="flex items-center gap-4">
+                    <Avatar className="neon-border">
+                      <AvatarImage src={review.avatar} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {review.author.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <CardTitle className="text-base">{review.author}</CardTitle>
+                      <div className="flex items-center gap-1 mt-1">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Icon
+                            key={i}
+                            name="Star"
+                            size={16}
+                            className={i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted'}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <span className="text-sm text-muted-foreground">{review.date}</span>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{review.text}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-16 rounded-2xl neon-border glass-effect p-8">
+          <h2 className="text-3xl font-bold mb-6 neon-text text-center">
+            <Icon name="Send" className="inline mr-2" size={32} />
+            Быстрая связь через Telegram
+          </h2>
+          <p className="text-center text-muted-foreground mb-6">
+            Оставь свой Telegram и мы свяжемся с тобой для оформления заказа или консультации
+          </p>
+          <div className="max-w-md mx-auto space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="telegram">Твой Telegram</Label>
+              <Input
+                id="telegram"
+                placeholder="@username"
+                value={telegramUsername}
+                onChange={(e) => setTelegramUsername(e.target.value)}
+                className="neon-border"
+              />
+            </div>
+            <Button
+              size="lg"
+              className="w-full neon-border bg-secondary hover:bg-secondary/80 text-secondary-foreground font-bold"
+              onClick={() => {
+                if (telegramUsername.trim()) {
+                  toast.success('✅ Заявка отправлена!', {
+                    description: `Скоро свяжемся с тобой: ${telegramUsername}`,
+                  });
+                  setTelegramUsername('');
+                } else {
+                  toast.error('Введи Telegram username');
+                }
+              }}
+            >
+              <Icon name="Send" className="mr-2" size={20} />
+              Отправить заявку
+            </Button>
+          </div>
+        </section>
 
         <section className="mt-16 rounded-2xl neon-border glass-effect p-8">
           <h2 className="text-3xl font-bold mb-6 neon-text text-center">
