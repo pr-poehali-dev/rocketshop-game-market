@@ -38,18 +38,30 @@ const Index = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [activeTab, setActiveTab] = useState('home');
   const [sortBy, setSortBy] = useState<string>('popular');
-  const [priceRange, setPriceRange] = useState<number[]>([0, 3000]);
+  const [priceRange, setPriceRange] = useState<number[]>([0, 5000]);
   const [telegramUsername, setTelegramUsername] = useState('');
 
   const products: Product[] = [
-    { id: 1, name: 'Valorant Points', price: 500, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', discount: 20, popular: true },
-    { id: 2, name: 'CS2 Коины', price: 350, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', popular: true },
-    { id: 3, name: 'Fortnite V-Bucks', price: 450, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg' },
-    { id: 4, name: 'League of Legends RP', price: 400, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', discount: 15 },
-    { id: 5, name: 'Cyberpunk 2077', price: 1999, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', popular: true },
-    { id: 6, name: 'Elden Ring', price: 2499, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', discount: 30 },
-    { id: 7, name: 'Red Dead Redemption 2', price: 1499, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg' },
-    { id: 8, name: 'GTA V', price: 999, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', popular: true },
+    { id: 1, name: 'Valorant Points 1000', price: 500, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', discount: 20, popular: true },
+    { id: 2, name: 'CS2 Коины 5000', price: 350, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', popular: true },
+    { id: 3, name: 'Fortnite V-Bucks 2800', price: 450, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg' },
+    { id: 4, name: 'League of Legends RP 3500', price: 400, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', discount: 15 },
+    { id: 5, name: 'Dota 2 Кристаллы 2000', price: 380, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', popular: true },
+    { id: 6, name: 'Apex Legends Монеты 4350', price: 520, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', discount: 10 },
+    { id: 7, name: 'PUBG UC 3200', price: 480, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg' },
+    { id: 8, name: 'Genshin Impact Кристаллы 3280', price: 650, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', discount: 25 },
+    { id: 9, name: 'Roblox Robux 4500', price: 550, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', popular: true },
+    { id: 10, name: 'Brawl Stars Гемы 2000', price: 420, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg' },
+    { id: 11, name: 'Warzone Points 2400', price: 390, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg', discount: 12 },
+    { id: 12, name: 'Free Fire Diamonds 2200', price: 360, category: 'currency', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/325b93da-4deb-4197-8e4a-a430d263ba7d.jpg' },
+    { id: 13, name: 'Cyberpunk 2077', price: 1999, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', popular: true },
+    { id: 14, name: 'Elden Ring', price: 2499, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', discount: 30 },
+    { id: 15, name: 'Red Dead Redemption 2', price: 1499, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg' },
+    { id: 16, name: 'GTA V', price: 999, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', popular: true },
+    { id: 17, name: 'Hogwarts Legacy', price: 2199, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', discount: 20 },
+    { id: 18, name: 'Baldur\'s Gate 3', price: 2799, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', popular: true },
+    { id: 19, name: 'Resident Evil 4 Remake', price: 1899, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg' },
+    { id: 20, name: 'Starfield', price: 2999, category: 'game', image: 'https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/27ef68be-cc9e-40ff-85b0-74b9ad3812b6.jpg', discount: 15 },
   ];
 
   const reviews: Review[] = [
@@ -174,7 +186,7 @@ const Index = () => {
             <Slider
               value={priceRange}
               onValueChange={setPriceRange}
-              max={3000}
+              max={5000}
               min={0}
               step={50}
               className="w-[200px]"
@@ -223,6 +235,39 @@ const Index = () => {
           </TabsContent>
         </Tabs>
 
+        <section className="mt-16 rounded-2xl neon-border glass-effect p-8">
+          <h2 className="text-3xl font-bold mb-6 neon-text text-center">
+            <Icon name="CreditCard" className="inline mr-2" size={32} />
+            Способы оплаты
+          </h2>
+          <p className="text-center text-muted-foreground mb-8">
+            Принимаем все популярные способы оплаты в России
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="flex flex-col items-center p-6 rounded-lg border-2 border-primary/20 bg-card hover:border-primary/50 transition-all">
+              <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-green-500/20">
+                <Icon name="Building2" size={32} className="text-green-500" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 neon-text">Sberbank</h3>
+              <p className="text-sm text-muted-foreground text-center">Моментальный перевод</p>
+            </div>
+            <div className="flex flex-col items-center p-6 rounded-lg border-2 border-primary/20 bg-card hover:border-primary/50 transition-all">
+              <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-yellow-500/20">
+                <Icon name="Landmark" size={32} className="text-yellow-500" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 neon-text">T-Bank</h3>
+              <p className="text-sm text-muted-foreground text-center">Быстрая оплата</p>
+            </div>
+            <div className="flex flex-col items-center p-6 rounded-lg border-2 border-primary/20 bg-card hover:border-primary/50 transition-all">
+              <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-blue-500/20">
+                <Icon name="Smartphone" size={32} className="text-blue-500" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 neon-text">СБП</h3>
+              <p className="text-sm text-muted-foreground text-center">Перевод по номеру</p>
+            </div>
+          </div>
+        </section>
+
         <ReviewsSection reviews={reviews} />
 
         <ContactSections
@@ -243,7 +288,7 @@ const Index = () => {
             <div>
               <h3 className="font-bold text-lg mb-4 neon-text">Контакты</h3>
               <p className="text-muted-foreground">support@rocketshop.com</p>
-              <p className="text-muted-foreground">Telegram: @rocketshop</p>
+              <p className="text-muted-foreground">Telegram: @rocketshopsup</p>
             </div>
             <div>
               <h3 className="font-bold text-lg mb-4 neon-text">Информация</h3>
