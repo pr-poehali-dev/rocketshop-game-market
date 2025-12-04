@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import Icon from '@/components/ui/icon';
+import Header from '@/components/Header';
+import ProductCard from '@/components/ProductCard';
+import ReviewsSection from '@/components/ReviewsSection';
+import ContactSections from '@/components/ContactSections';
 
 interface Product {
   id: number;
@@ -120,179 +119,16 @@ const Index = () => {
     return sum + price * item.quantity;
   }, 0);
 
-  const ProductCard = ({ product }: { product: Product }) => {
-    const finalPrice = product.discount
-      ? product.price * (1 - product.discount / 100)
-      : product.price;
-
-    return (
-      <Card className="group relative overflow-hidden border-2 border-primary/20 bg-card hover:border-primary/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/20">
-        {product.popular && (
-          <Badge className="absolute top-3 right-3 z-10 neon-border bg-primary text-primary-foreground">
-            🔥 ХИТ
-          </Badge>
-        )}
-        {product.discount && (
-          <Badge className="absolute top-3 left-3 z-10 neon-border-blue bg-secondary text-secondary-foreground">
-            -{product.discount}%
-          </Badge>
-        )}
-        <div className="relative h-48 overflow-hidden">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-60" />
-        </div>
-        <CardHeader>
-          <CardTitle className="text-lg neon-text">{product.name}</CardTitle>
-          <CardDescription className="flex items-center gap-2">
-            {product.discount && (
-              <span className="text-muted-foreground line-through text-sm">
-                {product.price}₽
-              </span>
-            )}
-            <span className="text-2xl font-bold text-primary">
-              {Math.round(finalPrice)}₽
-            </span>
-          </CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <Button
-            onClick={() => addToCart(product)}
-            className="w-full neon-border bg-primary hover:bg-primary/80 text-primary-foreground font-semibold"
-          >
-            <Icon name="ShoppingCart" className="mr-2" size={18} />
-            В корзину
-          </Button>
-        </CardFooter>
-      </Card>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 glass-effect border-b border-primary/20">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src="https://cdn.poehali.dev/projects/ed9aca59-b08a-48f4-a440-fecc0f8e48e8/files/accafdb8-ff24-4710-9327-071cd91b3803.jpg"
-              alt="RocketShop"
-              className="w-12 h-12 rounded-lg neon-border"
-            />
-            <h1 className="text-2xl md:text-3xl font-bold neon-text">RocketShop</h1>
-          </div>
-          <nav className="hidden md:flex items-center gap-6">
-            <Button
-              variant={activeTab === 'home' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('home')}
-              className="text-foreground hover:text-primary"
-            >
-              <Icon name="Home" className="mr-2" size={18} />
-              Главная
-            </Button>
-            <Button
-              variant={activeTab === 'currency' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('currency')}
-              className="text-foreground hover:text-primary"
-            >
-              <Icon name="Coins" className="mr-2" size={18} />
-              Валюта
-            </Button>
-            <Button
-              variant={activeTab === 'games' ? 'default' : 'ghost'}
-              onClick={() => setActiveTab('games')}
-              className="text-foreground hover:text-primary"
-            >
-              <Icon name="Gamepad2" className="mr-2" size={18} />
-              Игры
-            </Button>
-          </nav>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button className="relative neon-border bg-primary hover:bg-primary/80">
-                <Icon name="ShoppingCart" size={20} />
-                {cart.length > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center bg-secondary text-secondary-foreground">
-                    {cart.length}
-                  </Badge>
-                )}
-              </Button>
-            </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-lg glass-effect border-primary/20">
-              <SheetHeader>
-                <SheetTitle className="text-2xl neon-text">Корзина</SheetTitle>
-                <SheetDescription>
-                  {cart.length === 0 ? 'Корзина пуста' : `Товаров: ${cart.length}`}
-                </SheetDescription>
-              </SheetHeader>
-              <div className="mt-8 space-y-4">
-                {cart.map(item => {
-                  const finalPrice = item.discount
-                    ? item.price * (1 - item.discount / 100)
-                    : item.price;
-                  return (
-                    <Card key={item.id} className="border-primary/20">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-4">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-16 h-16 rounded-lg object-cover neon-border"
-                          />
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-foreground">{item.name}</h3>
-                            <p className="text-primary font-bold">{Math.round(finalPrice)}₽</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => updateQuantity(item.id, -1)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Icon name="Minus" size={16} />
-                            </Button>
-                            <span className="w-8 text-center font-semibold">{item.quantity}</span>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => updateQuantity(item.id, 1)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Icon name="Plus" size={16} />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => removeFromCart(item.id)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Icon name="Trash2" size={16} />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-              {cart.length > 0 && (
-                <div className="mt-8 space-y-4">
-                  <div className="flex items-center justify-between text-xl font-bold">
-                    <span>Итого:</span>
-                    <span className="neon-text">{Math.round(totalPrice)}₽</span>
-                  </div>
-                  <Button className="w-full neon-border bg-primary hover:bg-primary/80 text-primary-foreground font-bold py-6 text-lg">
-                    Оформить заказ
-                  </Button>
-                </div>
-              )}
-            </SheetContent>
-          </Sheet>
-        </div>
-      </header>
+      <Header
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        cart={cart}
+        removeFromCart={removeFromCart}
+        updateQuantity={updateQuantity}
+        totalPrice={totalPrice}
+      />
 
       <main className="container mx-auto px-4 py-8">
         <section className="relative mb-16 rounded-2xl overflow-hidden neon-border">
@@ -365,7 +201,7 @@ const Index = () => {
           <TabsContent value="home" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
               {getFilteredProducts().filter(p => p.popular).map(product => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} addToCart={addToCart} />
               ))}
             </div>
           </TabsContent>
@@ -373,7 +209,7 @@ const Index = () => {
           <TabsContent value="currency" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
               {getFilteredProducts().filter(p => p.category === 'currency').map(product => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} addToCart={addToCart} />
               ))}
             </div>
           </TabsContent>
@@ -381,114 +217,18 @@ const Index = () => {
           <TabsContent value="games" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
               {getFilteredProducts().filter(p => p.category === 'game').map(product => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} addToCart={addToCart} />
               ))}
             </div>
           </TabsContent>
         </Tabs>
 
-        <section className="mt-16 rounded-2xl neon-border glass-effect p-8">
-          <h2 className="text-3xl font-bold mb-6 neon-text text-center">
-            <Icon name="MessageCircle" className="inline mr-2" size={32} />
-            Отзывы клиентов
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {reviews.map(review => (
-              <Card key={review.id} className="border-primary/20 glass-effect">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <Avatar className="neon-border">
-                      <AvatarImage src={review.avatar} />
-                      <AvatarFallback className="bg-primary text-primary-foreground">
-                        {review.author.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <CardTitle className="text-base">{review.author}</CardTitle>
-                      <div className="flex items-center gap-1 mt-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Icon
-                            key={i}
-                            name="Star"
-                            size={16}
-                            className={i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted'}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <span className="text-sm text-muted-foreground">{review.date}</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{review.text}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+        <ReviewsSection reviews={reviews} />
 
-        <section className="mt-16 rounded-2xl neon-border glass-effect p-8">
-          <h2 className="text-3xl font-bold mb-6 neon-text text-center">
-            <Icon name="Send" className="inline mr-2" size={32} />
-            Быстрая связь через Telegram
-          </h2>
-          <p className="text-center text-muted-foreground mb-6">
-            Оставь свой Telegram и мы свяжемся с тобой для оформления заказа или консультации
-          </p>
-          <div className="max-w-md mx-auto space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="telegram">Твой Telegram</Label>
-              <Input
-                id="telegram"
-                placeholder="@username"
-                value={telegramUsername}
-                onChange={(e) => setTelegramUsername(e.target.value)}
-                className="neon-border"
-              />
-            </div>
-            <Button
-              size="lg"
-              className="w-full neon-border bg-secondary hover:bg-secondary/80 text-secondary-foreground font-bold"
-              onClick={() => {
-                if (telegramUsername.trim()) {
-                  toast.success('✅ Заявка отправлена!', {
-                    description: `Скоро свяжемся с тобой: ${telegramUsername}`,
-                  });
-                  setTelegramUsername('');
-                } else {
-                  toast.error('Введи Telegram username');
-                }
-              }}
-            >
-              <Icon name="Send" className="mr-2" size={20} />
-              Отправить заявку
-            </Button>
-          </div>
-        </section>
-
-        <section className="mt-16 rounded-2xl neon-border glass-effect p-8">
-          <h2 className="text-3xl font-bold mb-6 neon-text text-center">
-            <Icon name="Bell" className="inline mr-2 animate-glow-pulse" size={32} />
-            Push-уведомления
-          </h2>
-          <p className="text-center text-muted-foreground mb-6">
-            Подпишись на уведомления и получай информацию о новых товарах и акциях первым!
-          </p>
-          <div className="flex justify-center">
-            <Button
-              size="lg"
-              className="neon-border bg-secondary hover:bg-secondary/80 text-secondary-foreground font-bold"
-              onClick={() => {
-                toast.success('🔔 Уведомления включены!', {
-                  description: 'Теперь ты не пропустишь выгодные предложения',
-                });
-              }}
-            >
-              <Icon name="BellRing" className="mr-2" size={20} />
-              Включить уведомления
-            </Button>
-          </div>
-        </section>
+        <ContactSections
+          telegramUsername={telegramUsername}
+          setTelegramUsername={setTelegramUsername}
+        />
       </main>
 
       <footer className="mt-20 border-t border-primary/20 glass-effect">
